@@ -5,7 +5,7 @@ from Crypto import Random
 
 def encrypt(key, filename):
     chunksize = 64 * 1024
-    outputfile = '(encrypted)' + filename
+    outputFile = '(encrypted)' + filename
     filesize = str(os.path.getsize(filename)).zfill(16)
     IV = Random.new().read(16)
 
@@ -25,4 +25,24 @@ def encrypt(key, filename):
                     chunk += b' ' * (16 - (len(chunk) % 16))
 
                 outfile.write(encryptor.encrypt(chunk))
-                
+
+def decrypt(key, filename):
+    chunksize = 64 * 1024
+    outputFile = filename[11:]
+
+    with open(filename, 'rb') as infile:
+        filesize = int(infile.read(16))
+        IV = infile.read(16)
+
+        decryptor = AES.new(key, AES.MODE_CBC, IV)
+
+        with open(outputfile, 'wb') as outfile:
+            while True:
+                chunk = infile.read(chunksize)
+
+                if len(chunk) == 0:
+                    break
+
+                outfile.write(decryptor.decrypt(chunk))
+                outfile.truncate(filesize)
+
