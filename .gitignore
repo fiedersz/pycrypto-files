@@ -1,0 +1,11 @@
+venv
+.vscode
+_pycache_/
+*.pyc
+.DS_Store
+*.cfg
+settings.json
+*.db
+
+
+*Icon*
