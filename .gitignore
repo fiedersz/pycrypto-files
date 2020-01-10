@@ -6,6 +6,6 @@ _pycache_/
 *.cfg
 settings.json
 *.db
-
+*.jpg
 
 *Icon*

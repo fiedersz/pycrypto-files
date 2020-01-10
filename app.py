@@ -9,11 +9,11 @@ def encrypt(key, filename):
     filesize = str(os.path.getsize(filename)).zfill(16)
     IV = Random.new().read(16)
 
-    encryptor.AES.new(key, AES.MOSE_CBC, IV)
+    encryptor = AES.new(key, AES.MODE_CBC, IV)
     
     with open(filename, 'rb') as infile:
         with open(outputFile, 'wb') as outfile:
-            outfile.write(filesize.encode(utf - 8))
+            outfile.write(filesize.encode('utf-8'))
             outfile.write(IV)
 
             while True:
@@ -36,7 +36,7 @@ def decrypt(key, filename):
 
         decryptor = AES.new(key, AES.MODE_CBC, IV)
 
-        with open(outputfile, 'wb') as outfile:
+        with open(outputFile, 'wb') as outfile:
             while True:
                 chunk = infile.read(chunksize)
 
@@ -45,4 +45,28 @@ def decrypt(key, filename):
 
                 outfile.write(decryptor.decrypt(chunk))
                 outfile.truncate(filesize)
+
+def getKey(password):
+    hasher = SHA256.new(password.encode('utf-8'))
+    return hasher.digest()
+
+def Main():
+    choice = input('Would you like to (E)ncrypt or (D)ecrypt a file?: ')
+    if choice == 'E':
+        filename = input('File to encrypt: ')
+        password = input('Password: ')
+        encrypt(getKey(password), filename)
+        print('Done.')
+    elif choice == 'D':
+        filename = input('File to decrypt: ')
+        password = input('Password: ')
+        decrypt(getKey(password), filename)
+        print('Done.')
+    else:
+        print('No option selected, closing...')
+
+if __name__ == '__main__':
+    Main()
+
+
 
